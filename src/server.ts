@@ -30,6 +30,22 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   /**************************************************************************** */
 
   //! END @TODO1
+
+  app.get( "/filteredimage", async ( req, res ) => {
+    const url = req.query.image_url;
+    if (!url) {
+      res.status(400).send("Invalid image url");
+    }
+
+    const absolutePath = await filterImageFromURL(url);
+    res.sendFile(absolutePath, function(err) {
+      if (err) {
+        console.log( `Failed to send the file` );
+      } else {
+        deleteLocalFiles([absolutePath]);
+      }
+    });
+  } );
   
   // Root Endpoint
   // Displays a simple message to the user
